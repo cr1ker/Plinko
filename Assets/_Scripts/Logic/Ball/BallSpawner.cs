@@ -1,14 +1,21 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.Mathematics;
 using UnityEngine;
+using VContainer;
 
 public class BallSpawner : MonoBehaviour
 {
     [SerializeField] private GameObject _ballPrefab;
     [SerializeField] private Transform _spawnPoint;
+    [SerializeField] private float _targetTime = 2;
+
 
     private float _timer;
+    private BallSpawnerMover _ballSpawnerMover;
+
+    [Inject]
+    private void Construct(IObjectResolver objectResolver)
+    {
+        _ballSpawnerMover = objectResolver.Resolve<BallSpawnerMover>();
+    }
     
     #region MONO
 
@@ -16,11 +23,12 @@ public class BallSpawner : MonoBehaviour
     {
         _timer += Time.deltaTime;
 
-        if (_timer >= 2)
+        if (_timer >= _targetTime)
         {
             Instantiate(_ballPrefab, _spawnPoint.position, Quaternion.identity);
 
             _timer = 0;
+            _ballSpawnerMover.DoRandomMoving(_targetTime);
         }
     }
 
