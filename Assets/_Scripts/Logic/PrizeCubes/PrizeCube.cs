@@ -29,6 +29,7 @@ public class PrizeCube : MonoBehaviour
     {
         if (other.TryGetComponent(out Ball ball))
         {
+            ball.OnPrize(_targetMultiplyValue);
             ball.gameObject.SetActive(false);
             Destroy(ball.gameObject);
             Tween.PunchLocalPosition(transform, Vector3.down, 0.5f);
