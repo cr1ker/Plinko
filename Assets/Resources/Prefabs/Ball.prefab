@@ -140,6 +140,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9fc982bc15c41a0a5532a16d47172a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  BallPrizeValue: 0
 --- !u!1 &8194385682308072199
 GameObject:
   m_ObjectHideFlags: 0
@@ -202,6 +203,7 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: c4c05d9caf9d7499aa4221fb7b79042e, type: 2}
+  - {fileID: 2100000, guid: fb8edafbe6fc941d68363acd6b055f32, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

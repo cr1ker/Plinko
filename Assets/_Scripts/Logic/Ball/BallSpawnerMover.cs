@@ -5,20 +5,14 @@ using Random = UnityEngine.Random;
 
 public class BallSpawnerMover : MonoBehaviour
 {
-    [SerializeField] private float _rangeXPosition;
-    [SerializeField] private int _movingSpeed;
-    [SerializeField] private Transform _ballspawner;
-
-    #region MONO
-
-
-
-    #endregion
-
+    private Vector2 _moveableZone;
+    
     public void DoRandomMoving(float intervalTime)
     {
-        Tween.PositionX(_ballspawner, GetRandomXPosition(), intervalTime, Ease.InOutBack);
+        Tween.PositionX(transform, GetRandomXPosition(), intervalTime, Ease.InOutBack);
     }
+
+    public void UpdateZone(Vector2 newZone) => _moveableZone = newZone;
     
-    private float GetRandomXPosition() => Random.Range(-_rangeXPosition, _rangeXPosition);
+    private float GetRandomXPosition() => Random.Range(_moveableZone.x, _moveableZone.y);
 }

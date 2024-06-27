@@ -18,7 +18,7 @@ namespace UI.ProgressBar
             var currentMoneyText = ProgressValue.CurrentValue;
             var maxMoneyText = MaxValue.CurrentValue;
 
-            _moneyText.text = $"{currentMoneyText} / {maxMoneyText}";
+            _moneyText.text = $"{currentMoneyText.ToString("F2")} / {maxMoneyText}";
         }
 
         protected override void OnAwake()
