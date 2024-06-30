@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using LOGIC.BALL;
 using LOGIC.Money;
+using LOGIC.UPGRADES;
 using NaughtyAttributes;
 using UnityEngine;
 using VContainer;
@@ -33,7 +34,7 @@ public class BallSpawner : MonoBehaviour
 
     private void Start()
     {
-        SpawnBallMachine();
+
     }
     
     private void Update()
@@ -56,6 +57,40 @@ public class BallSpawner : MonoBehaviour
     }
 
     #endregion
+
+    public void SetSpawnSpeed(int upgradeLevel)
+    {
+        switch (upgradeLevel)
+        {
+            case 1:
+                _targetTime = 1.5f;
+                break;
+            case 2:
+                _targetTime = 1.25f;
+                break;
+            case 3:
+                _targetTime = 1f;
+                break;
+            case 4:
+                _targetTime = 0.85f;
+                break;
+            case 5:
+                _targetTime = 0.75f;
+                break;
+            case 6:
+                _targetTime = 0.6f;
+                break;
+            case 7:
+                _targetTime = 0.5f;
+                break;
+            case 8:
+                _targetTime = 0.4f;
+                break;
+            default:
+                _targetTime = 2;
+                break;
+        }
+    }
 
     [Button()]
     public void SpawnBallMachine()
