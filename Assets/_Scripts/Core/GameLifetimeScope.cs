@@ -1,3 +1,4 @@
+using LOGIC;
 using LOGIC.GameStateMachine;
 using LOGIC.Level;
 using LOGIC.Money;
@@ -9,12 +10,16 @@ using VContainer.Unity;
 
 public class GameLifetimeScope : LifetimeScope
 {
+    [SerializeField] private GameManager _gameManager;
     [SerializeField] private BallSpawner _ballSpawner;
     [SerializeField] private BallSpawnerMover _ballSpawnerMover;
     [SerializeField] private UpgradeButtons _upgradeButtons;
+    [SerializeField] private UIManager _uiManager;
 
     protected override void Configure(IContainerBuilder builder)
     {
+        builder.RegisterComponent(_gameManager);
+        builder.RegisterComponent(_uiManager);
         builder.RegisterEntryPoint<GameStateMachine>();
         
         builder.RegisterComponent(_ballSpawner);
