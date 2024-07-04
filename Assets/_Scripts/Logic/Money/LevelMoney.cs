@@ -9,7 +9,7 @@ namespace LOGIC.Money
     {
         #region CONSTANTS
 
-        private const string LEVEL_COLLECTABLE_MONEY = nameof(LEVEL_COLLECTABLE_MONEY);
+        private const string LEVEL_MONEY = nameof(LEVEL_MONEY);
         private const float WAIT_SAVE_INTERVAL = 0.5f;
 
         #endregion
@@ -29,6 +29,12 @@ namespace LOGIC.Money
         public void Initialize()
         {
             _levelCollectableMoney.EventOnMoneyAdd += AddMoney;
+
+            if (!SaveManager.HasData(LEVEL_MONEY))
+            {
+                SaveManager.SaveData(LEVEL_MONEY, 1000);
+                Money.Value = 1000;
+            }
         }
         
         public void Tick()
@@ -38,7 +44,7 @@ namespace LOGIC.Money
             var isSaveAvailable = _saverTimerTime >= WAIT_SAVE_INTERVAL; 
             if (isSaveAvailable)
             {
-                SaveManager.SaveData(LEVEL_COLLECTABLE_MONEY, Money.Value);
+                SaveManager.SaveData(LEVEL_MONEY, Money.Value);
                 _saverTimerTime = 0;
             }
         }
@@ -67,7 +73,7 @@ namespace LOGIC.Money
 
         public void OnLoadingLevel()
         {
-            SaveManager.GetData(LEVEL_COLLECTABLE_MONEY, out int money);
+            SaveManager.GetData(LEVEL_MONEY, out int money);
             Money.Value = money;
         }
 
@@ -78,7 +84,7 @@ namespace LOGIC.Money
 
         public void OnCompleteLevel()
         {
-            SaveManager.SaveData(LEVEL_COLLECTABLE_MONEY, 0);
+            SaveManager.SaveData(LEVEL_MONEY, 0);
             Money.Value = 0;
         }
 

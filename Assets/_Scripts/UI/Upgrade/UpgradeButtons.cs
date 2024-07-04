@@ -10,7 +10,10 @@ namespace UI
         [SerializeField] private UpgradeButton _speedSpawnUpgradeButton;
 
         [Inject] private Upgrades _upgrades;
-        
+
+        public UpgradeButton BallSpawnMachineUpgradeButton => _ballSpawnMachineUpgradeButton;
+        public UpgradeButton SpeedSpawnUpgradeButton => _speedSpawnUpgradeButton;
+
         #region MONO
 
         private void Awake()
