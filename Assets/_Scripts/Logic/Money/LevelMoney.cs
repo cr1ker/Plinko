@@ -32,8 +32,8 @@ namespace LOGIC.Money
 
             if (!SaveManager.HasData(LEVEL_MONEY))
             {
-                SaveManager.SaveData(LEVEL_MONEY, 1000);
-                Money.Value = 1000;
+                SaveManager.SaveData(LEVEL_MONEY, 1000f);
+                Money.Value = 1000f;
             }
         }
         
@@ -44,7 +44,7 @@ namespace LOGIC.Money
             var isSaveAvailable = _saverTimerTime >= WAIT_SAVE_INTERVAL; 
             if (isSaveAvailable)
             {
-                SaveManager.SaveData(LEVEL_MONEY, Money.Value);
+                SaveManager.SaveData(LEVEL_MONEY, Money.CurrentValue);
                 _saverTimerTime = 0;
             }
         }
@@ -73,7 +73,7 @@ namespace LOGIC.Money
 
         public void OnLoadingLevel()
         {
-            SaveManager.GetData(LEVEL_MONEY, out int money);
+            SaveManager.GetData(LEVEL_MONEY, out float money);
             Money.Value = money;
         }
 
@@ -84,8 +84,8 @@ namespace LOGIC.Money
 
         public void OnCompleteLevel()
         {
-            SaveManager.SaveData(LEVEL_MONEY, 0);
-            Money.Value = 0;
+            SaveManager.SaveData(LEVEL_MONEY, 0f);
+            Money.Value = 0f;
         }
 
         #endregion

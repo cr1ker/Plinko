@@ -7,13 +7,13 @@ using VContainer.Unity;
 
 namespace LOGIC.Money
 {
-    public class LevelCollectableMoney : ITickable, IMoneyHandler
+    public class LevelCollectableMoney : IInitializable, ITickable, IMoneyHandler
     {
         #region CONSTANTS
 
         private const string LEVEL_COLLECTABLE_MONEY = nameof(LEVEL_COLLECTABLE_MONEY);
         private const float WAIT_SAVE_INTERVAL = 0.5f;
-        private const int START_COLLECTABLE_TARGET = 5000;
+        private const int START_COLLECTABLE_TARGET = 250;
         private const int MAX_LEVEL = 50; 
         
         #endregion
@@ -26,11 +26,18 @@ namespace LOGIC.Money
         public readonly ReactiveProperty<int> TargetLevelMoney = new ReactiveProperty<int>();
         [Header("DEPENDENCIES")]
         [Inject] private LevelService _levelService;
+        [Inject] private GameStateMachine.GameStateMachine _gameStateMachine;
 
         private float _saverTimerTime;
         private bool _isCountingActive;
 
         #region MONO
+
+        public void Initialize()
+        {
+            SaveManager.GetData(LEVEL_COLLECTABLE_MONEY, out int money);
+            Money.Value = money;
+        }
 
         public void Tick()
         {
@@ -39,7 +46,7 @@ namespace LOGIC.Money
             var isSaveAvailable = _saverTimerTime >= WAIT_SAVE_INTERVAL; 
             if (isSaveAvailable)
             {
-                SaveManager.SaveData(LEVEL_COLLECTABLE_MONEY, Money.Value);
+                SaveManager.SaveData(LEVEL_COLLECTABLE_MONEY, (int) Money.CurrentValue);
                 _saverTimerTime = 0;
             }
         }
@@ -75,7 +82,7 @@ namespace LOGIC.Money
 
                 if (_isCountingActive)
                 {
-                    _levelService.CompleteLevel();
+                    _gameStateMachine.SetCompletedLevelState();
                 }
             }
         }
@@ -118,14 +125,16 @@ namespace LOGIC.Money
 
         public void OnPlayingLevel()
         {
+            _isCountingActive = true;
             return;
         }
 
         public void OnCompleteLevel()
         {
             _isCountingActive = false;
-            SaveManager.SaveData(LEVEL_COLLECTABLE_MONEY, 0);
-            Money.Value = 0;
+            SaveManager.SaveData(LEVEL_COLLECTABLE_MONEY, 0f);
+            Money.Value = 0f;
+            SetTargetLevelMoneyByCurrentLevel();
         }
         
         #endregion

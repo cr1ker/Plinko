@@ -1,3 +1,4 @@
+using CORE.AUDIO;
 using LOGIC.UPGRADES;
 using UnityEngine;
 using VContainer;
@@ -18,33 +19,36 @@ namespace UI
 
         private void Awake()
         {
-            UpgradeData data = _upgrades.GetSpawnBallMachinesUpgradeData();
-
-            string targetText = data.IsMaxLevel ? "MAX LEVEL" : data.UpgradePrice.ToString();
-                    
-            _ballSpawnMachineUpgradeButton.UpdateButton(targetText);
+            UpdateBallMachineButton();
             
             _ballSpawnMachineUpgradeButton.Button.onClick
                 .AddListener(() =>
                 {
-                    _upgrades.TryUpgrade(Upgrades.SPAWN_BALL_MACHINES_UPGRADE);
+                    var isUpgraded = _upgrades.TryUpgrade(Upgrades.SPAWN_BALL_MACHINES_UPGRADE);
+                    
+                    if (isUpgraded)
+                    {
+                        AudioService.Singleton.PlayAudioOnce(AudioTypes.UpgradeSound);
+                    }
                     UpgradeData data = _upgrades.GetSpawnBallMachinesUpgradeData();
 
                     string targetText = data.IsMaxLevel ? "MAX LEVEL" : data.UpgradePrice.ToString();
                     
                     _ballSpawnMachineUpgradeButton.UpdateButton(targetText);
                 });
-            
-            
-            data = _upgrades.GetSpawnBallSpeedUpgradeData();
 
-            targetText = data.IsMaxLevel ? "MAX LEVEL" : data.UpgradePrice.ToString();
-                    
-            _speedSpawnUpgradeButton.UpdateButton(targetText);
+            UpdateSpeedSpawnUpgrade();
+            
             _speedSpawnUpgradeButton.Button.onClick
                 .AddListener(() =>
                 {
-                    _upgrades.TryUpgrade(Upgrades.SPAWN_BALL_SPEED_UPGRADE);
+                    var isUpgraded = _upgrades.TryUpgrade(Upgrades.SPAWN_BALL_SPEED_UPGRADE);
+                    
+                    if (isUpgraded)
+                    {
+                        AudioService.Singleton.PlayAudioOnce(AudioTypes.UpgradeSound);
+                    }
+
                     
                     UpgradeData data = _upgrades.GetSpawnBallSpeedUpgradeData();
 
@@ -52,6 +56,34 @@ namespace UI
                     
                     _speedSpawnUpgradeButton.UpdateButton(targetText);
                 });
+        }
+
+        #endregion
+
+        private void UpdateBallMachineButton()
+        {
+            UpgradeData data = _upgrades.GetSpawnBallMachinesUpgradeData();
+
+            string targetText = data.IsMaxLevel ? "MAX LEVEL" : data.UpgradePrice.ToString();
+                    
+            _ballSpawnMachineUpgradeButton.UpdateButton(targetText);
+        }
+
+        private void UpdateSpeedSpawnUpgrade()
+        {
+            UpgradeData data = _upgrades.GetSpawnBallSpeedUpgradeData();
+
+            string targetText = data.IsMaxLevel ? "MAX LEVEL" : data.UpgradePrice.ToString();
+                    
+            _speedSpawnUpgradeButton.UpdateButton(targetText);
+        }
+
+        #region CALLBACKS
+
+        public void OnCompleteLevel()
+        {
+            UpdateBallMachineButton();
+            UpdateSpeedSpawnUpgrade();
         }
 
         #endregion

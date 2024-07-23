@@ -14,19 +14,24 @@ namespace LOGIC.GameStateMachine
 
         private readonly GameStateMachine _gameStateMachine;
         private readonly LevelCollectableMoney _levelCollectableMoney;
+        private readonly LevelMoney _levelMoney;
+        private readonly WinObserver _winObserver;
         private bool _isFirstLoading = true;
         
         public GameLoadingState(GameStateMachine gameStateMachine, IObjectResolver objectResolver)
         {
             _gameStateMachine = gameStateMachine;
             _levelCollectableMoney = objectResolver.Resolve<LevelCollectableMoney>();
+            _levelMoney = objectResolver.Resolve<LevelMoney>();
+            _winObserver = objectResolver.Resolve<WinObserver>();
             Application.targetFrameRate = 60;
         }
         
         public async void Enter()
         {
             _levelCollectableMoney.OnLoadingLevel();
-            
+            _levelMoney.OnLoadingLevel();
+            _winObserver.OnLoadingLevel();
             _gameStateMachine.SetPlayingState();
         }
 

@@ -25,6 +25,7 @@ namespace LOGIC.BOARD
         [SerializeField] private float _yOffset = 1.0f;
         [SerializeField] private float _dropHeight = 10.0f;
         [SerializeField] private bool _randomizeBoard = false;
+        [SerializeField] private Transform _board;
 
         public GameObject PegPrefab => _pegPrefab;
         public int InitialPegs => _initialPegs;
@@ -34,12 +35,40 @@ namespace LOGIC.BOARD
         public float YOffset => _yOffset;
         public float DropHeight => _dropHeight;
 
-        private void Start()
+        public void GenerateRandomPlinkoBoard()
         {
-            if (_randomizeBoard)
-                GenerateRandomPlinkoBoard();
-            else
-                GeneratePlinkoBoard();
+            int previousInterval = Int32.MinValue;
+
+            for (int row = 0; row < _rows; row++)
+            {
+                int randomIntervalBetweenPegs;
+                var randomPegsCount = GetRandomPegsCount();
+                
+                do
+                {
+                    randomIntervalBetweenPegs = GetRandomIntervalBetweenPegs();
+                } while (previousInterval == randomIntervalBetweenPegs);
+
+                previousInterval = randomIntervalBetweenPegs;
+                var targetYPosition = row * -_yOffset;
+                var startX = -((randomPegsCount - 1) * randomIntervalBetweenPegs) / 2;
+                
+                for (int peg = 0; peg < randomPegsCount; peg++)
+                {
+                    int newXPosition = startX + peg * randomIntervalBetweenPegs;
+                    Vector3 pegPosition = new Vector3(newXPosition, targetYPosition, 0);
+                    Instantiate(_pegPrefab, pegPosition, _pegPrefab.transform.rotation, _board);
+                }
+            }
+        }
+
+        public void DestroyBoard()
+        {
+            Peg[] gameObjects = _board.GetComponentsInChildren<Peg>();
+            foreach (var element in gameObjects)
+            {
+                Destroy(element.gameObject);
+            }
         }
 
         private void GeneratePlinkoBoard()
@@ -53,33 +82,6 @@ namespace LOGIC.BOARD
                 {
                     float xPos = startX + peg * _xOffset;
                     Vector3 pegPosition = new Vector3(xPos, row * -_yOffset, 0);
-                    Instantiate(_pegPrefab, pegPosition, _pegPrefab.transform.rotation, transform);
-                }
-            }
-        }
-
-        private void GenerateRandomPlinkoBoard()
-        {
-            int previousInterval = Int32.MinValue;
-
-            for (int row = 0; row < _rows; row++)
-            {
-                int randomIntervalBetweenPegs;
-                var randomPegsCount = GetRandomPegsCount();
-                
-                do
-                {
-                     randomIntervalBetweenPegs = GetRandomIntervalBetweenPegs();
-                } while (previousInterval == randomIntervalBetweenPegs);
-
-                previousInterval = randomIntervalBetweenPegs;
-                var targetYPosition = row * -_yOffset;
-                var startX = -((randomPegsCount - 1) * randomIntervalBetweenPegs) / 2;
-                
-                for (int peg = 0; peg < randomPegsCount; peg++)
-                {
-                    int newXPosition = startX + peg * randomIntervalBetweenPegs;
-                    Vector3 pegPosition = new Vector3(newXPosition, targetYPosition, 0);
                     Instantiate(_pegPrefab, pegPosition, _pegPrefab.transform.rotation, transform);
                 }
             }

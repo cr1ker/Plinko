@@ -45,7 +45,7 @@ namespace LOGIC.GameStateMachine
             SetState(loadingState);
         }
 
-        private void SetCompletedLevelState()
+        public void SetCompletedLevelState()
         {
             var completedLevelState = GetState<GameCompletedLevelState>();
             SetState(completedLevelState);

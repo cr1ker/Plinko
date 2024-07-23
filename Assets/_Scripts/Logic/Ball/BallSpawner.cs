@@ -19,6 +19,8 @@ public class BallSpawner : MonoBehaviour
     [SerializeField] private float _targetTime = 2;
     [SerializeField] private int _targetPrize;
 
+    public bool IsSpawnAvailable;
+    
     private float _timer;
     private BallSpawnerMover _ballSpawnerMover;
     private LevelCollectableMoney _levelCollectableMoney;
@@ -32,13 +34,13 @@ public class BallSpawner : MonoBehaviour
     
     #region MONO
 
-    private void Start()
-    {
-
-    }
-    
     private void Update()
     {
+        if (!IsSpawnAvailable)
+        {
+            return;
+        }
+        
         _timer += Time.deltaTime;
 
         if (_timer >= _targetTime)
@@ -99,6 +101,16 @@ public class BallSpawner : MonoBehaviour
         _spawnerMachines.Add(spawnerMachine);
         
         UpdateZones();
+    }
+
+    public void DestroyBallMachines()
+    {
+        foreach (var ballSpawnerMachine in _spawnerMachines)
+        {
+            Destroy(ballSpawnerMachine.gameObject);
+        }
+
+        _spawnerMachines = new List<BallSpawnerMachine>();
     }
     
     private void UpdateZones()

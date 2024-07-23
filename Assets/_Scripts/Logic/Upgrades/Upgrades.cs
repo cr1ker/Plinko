@@ -4,7 +4,7 @@ using VContainer.Unity;
 
 namespace LOGIC.UPGRADES
 {
-    public class Upgrades : IInitializable, IStartable
+    public class Upgrades : IInitializable
     {
         #region CONSTANTS
 
@@ -32,19 +32,6 @@ namespace LOGIC.UPGRADES
             {
                 SaveManager.SaveData(SPAWN_BALL_SPEED_UPGRADE, 1);
                 SaveManager.SaveData(SPAWN_BALL_MACHINES_UPGRADE, 1);
-            }
-        }
-
-        public void Start()
-        {
-            UpgradeData data = GetSpawnBallSpeedUpgradeData();
-            _ballSpawner.SetSpawnSpeed(data.UpgradeLevel);
-
-            data = GetSpawnBallMachinesUpgradeData();
-
-            for (int i = 0; i < data.UpgradeLevel; i++)
-            {
-                _ballSpawner.SpawnBallMachine();
             }
         }
 
@@ -109,6 +96,29 @@ namespace LOGIC.UPGRADES
 
             return false;
         }
+        
+        #region CALLBACKS
+        
+        public void OnPlayingLevel()
+        {
+            UpgradeData data = GetSpawnBallSpeedUpgradeData();
+            _ballSpawner.SetSpawnSpeed(data.UpgradeLevel);
+
+            data = GetSpawnBallMachinesUpgradeData();
+
+            for (int i = 0; i < data.UpgradeLevel; i++)
+            {
+                _ballSpawner.SpawnBallMachine();
+            }
+        }
+
+        public void OnCompleteLevel()
+        {
+            SaveManager.SaveData(SPAWN_BALL_MACHINES_UPGRADE, 1);
+            SaveManager.SaveData(SPAWN_BALL_SPEED_UPGRADE, 1);
+        }
+
+        #endregion
     }
 }
 

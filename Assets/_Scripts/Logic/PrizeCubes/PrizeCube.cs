@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using CORE.AUDIO;
 using LOGIC.BALL;
 using PrimeTween;
 using UnityEngine;
@@ -30,6 +31,7 @@ public class PrizeCube : MonoBehaviour
         if (other.TryGetComponent(out Ball ball))
         {
             ball.OnPrize(_targetMultiplyValue);
+            AudioService.Singleton.PlayAudioOnce(AudioTypes.PrizeZoneBallSound, 1, 1.05f);
             ball.gameObject.SetActive(false);
             Destroy(ball.gameObject);
             Tween.PunchLocalPosition(transform, Vector3.down, 0.5f);

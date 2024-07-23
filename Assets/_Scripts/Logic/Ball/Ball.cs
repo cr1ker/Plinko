@@ -1,3 +1,5 @@
+using System;
+using CORE.AUDIO;
 using LOGIC.Money;
 using UnityEngine;
 
@@ -13,5 +15,14 @@ namespace LOGIC.BALL
             BallPrizeValue *= multiplier;
             LevelCollectableMoney.AddMoney(BallPrizeValue);
         }
+
+        #region CALLBACKS
+
+        private void OnCollisionEnter(Collision other)
+        {
+            AudioService.Singleton.PlayAudioOnce(AudioTypes.ContactBallSound, 1, 1.15f);
+        }
+
+        #endregion
     }
 }
